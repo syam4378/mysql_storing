@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Auth</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+  <!-- SIGNUP -->
+  <div id="sectionSignup" class="auth-card card">
+    <div class="card-body">
+      <h4 class="brand text-center mb-4">✨ Create Account</h4>
+      <input type="text"     id="s-username" class="form-control mb-3" placeholder="Username" />
+      <input type="email"    id="s-email"    class="form-control mb-3" placeholder="Email" />
+      <input type="password" id="s-password" class="form-control mb-3" placeholder="Password" />
+      <button class="btn btn-primary btn-block" onclick="signup()">Sign Up</button>
+      <p class="text-center mt-3 mb-0">Already have an account? <a href="#" onclick="display('sectionLogin')">Login here</a></p>
+      <p id="msg"  class="text-center mt-2"></p>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="sectionLogin" class="auth-card card">
+    <div class="card-body">
+      <h4 class="brand text-center mb-4">👋 Welcome Back</h4>
+      <input type="email"    id="l-email"    class="form-control mb-3" placeholder="Email" />
+      <input type="password" id="l-password" class="form-control mb-3" placeholder="Password" />
+      <button class="btn btn-primary btn-block" onclick="login()">Login</button>
+      <p class="text-center mt-3 mb-0">Don't have an account? <a href="#" onclick="display('sectionSignup')">Sign up here</a></p>
+      <p id="msg2" class="text-center mt-2"></p>
+    </div>
+  </div>
+
+<script>
+  function display(id) {
+    document.querySelectorAll("[id^='section']").forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+  }
+  display('sectionSignup');
+
+  async function signup() {
+    const res  = await fetch('/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('s-username').value,
+        email:    document.getElementById('s-email').value,
+        password: document.getElementById('s-password').value
+      })
+    });
+    const data = await res.json();
+    document.getElementById('msg').textContent  = data.message;
+    document.getElementById('msg').style.color  = res.ok ? 'green' : 'red';
+    if (res.ok) setTimeout(() => display('sectionLogin'), 1000);
+  }
+
+  async function login() {
+    const res  = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email:    document.getElementById('l-email').value,
+        password: document.getElementById('l-password').value
+      })
+    });
+    const data = await res.json();
+    document.getElementById('msg2').textContent = data.message;
+    document.getElementById('msg2').style.color = res.ok ? 'green' : 'red';
+    if (res.ok) {
+      localStorage.setItem('userId', data.userId);
+      window.location.href = '/profile.html';
+    }
+  }
+</script>
+</body>
+</html>

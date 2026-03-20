@@ -1,0 +1,17 @@
+body { background: #f0f2f5; }
+
+.auth-card {
+  max-width: 400px;
+  margin: 80px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.auth-card .card-body { padding: 35px; }
+
+.brand { color: #4f46e5; font-weight: 700; font-size: 24px; }
+
+input { border-radius: 8px !important; }
+
+.btn-primary { background: #4f46e5 !important; border: none; border-radius: 8px; }
+.btn-primary:hover { background: #4338ca !important; }
